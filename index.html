@@ -9,12 +9,12 @@
   @font-face { font-family: "Geist"; src: url("assets/fonts/Geist-Medium.ttf") format("truetype"); font-weight: 500; }
 
   :root {
-    --paper: #FFFFFF;
+    --page: #FFFFFF; --code: #F2F2F2;
+    --paper: #F2F2F2;
+    --surface: #FFFFFF;
     --ink: #0A0A0A;
     --muted: #8E8E8E;
-    --soft: #F2F2F2;
-    --cell: #F5F5F4;
-    --star-empty: #EAEAEA;
+    --star-empty: #DBDBDB;
     --alert: #FF3848;
     --line: #EDEDED;
     --red: #FF3848; --blue: #297FFF; --green: #30D754; --yellow: #FFD414; --purple: #B638FF;
@@ -22,14 +22,14 @@
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
-    background: var(--paper); color: var(--ink);
+    background: var(--page); color: var(--ink);
     font-family: "Geist", system-ui, sans-serif; font-size: 15px; line-height: 1.55;
     -webkit-font-smoothing: antialiased; font-feature-settings: "tnum" 1;
   }
   .page { max-width: 1180px; margin: 0 auto; padding: 72px 48px 96px; }
   h1, h2, h3, .num { font-weight: 500; letter-spacing: -0.02em; }
   .muted { color: var(--muted); }
-  code { font-family: inherit; font-size: 0.93em; background: var(--soft); padding: 1px 7px; border-radius: 999px; white-space: nowrap; }
+  code { font-family: inherit; font-size: 0.93em; background: var(--code); padding: 1px 7px; border-radius: 999px; white-space: nowrap; }
 
   header { display: flex; justify-content: space-between; align-items: flex-end; gap: 32px; flex-wrap: wrap; }
   header h1 { font-size: 56px; line-height: 1; }
@@ -82,14 +82,14 @@
   .spec .v { font-size: 20px; font-weight: 500; letter-spacing: -0.01em; }
 
   .components { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
-  .comp { background: var(--cell); border-radius: 24px; padding: 28px; min-height: 210px; display: flex; flex-direction: column; justify-content: space-between; }
+  .comp { background: var(--paper); border-radius: 24px; padding: 28px; min-height: 210px; display: flex; flex-direction: column; justify-content: space-between; }
   .comp .demo { flex: 1; display: flex; align-items: center; justify-content: center; gap: 18px; flex-wrap: wrap; padding: 12px 0 20px; }
   .comp .name { font-weight: 500; }
   .comp .desc { font-size: 13px; color: var(--muted); }
   button.primary { font: 500 16px "Geist"; color: #fff; background: var(--ink); border: 0; border-radius: 999px; height: 52px; padding: 0 40px; cursor: pointer; transition: transform .25s var(--press); }
   button.primary:active { transform: scale(.92); transition: transform .07s ease-out; }
   button.text { font: 400 15px "Geist"; color: var(--ink); background: none; border: 0; cursor: pointer; padding: 8px 12px; }
-  .pill { display: inline-flex; align-items: center; gap: 8px; background: var(--soft); border-radius: 999px; padding: 6px 14px; font-size: 13px; }
+  .pill { display: inline-flex; align-items: center; gap: 8px; background: var(--surface); border-radius: 999px; padding: 6px 14px; font-size: 13px; }
   .pill.goal { padding: 6px 16px 6px 8px; font-size: 18px; font-weight: 500; }
   .pill.goal img { width: 26px; height: 26px; }
   .stat { text-align: center; }
@@ -99,6 +99,8 @@
   .star { width: 60px; height: 60px; }
   .demo .star.on { animation: star 1.6s var(--press) infinite; }
   @keyframes star { 0%, 30% { transform: scale(0); } 45% { transform: scale(1.25); } 60%, 100% { transform: scale(1); } }
+  .goal-cell { display: inline-flex; align-items: center; gap: 8px; }
+  .goal-cell img { width: 24px; height: 24px; }
   .cellbox { width: 56px; height: 56px; border-radius: 14px; background: #fff; }
   .board-mini { display: grid; grid-template-columns: repeat(3, 56px); gap: 4px; }
   .board-mini img { width: 56px; height: 56px; }
@@ -115,10 +117,10 @@
   .rules li:last-child { border-bottom: 0; }
 
   .layout { display: grid; grid-template-columns: 240px 1fr; gap: 40px; align-items: start; }
-  .phone { position: relative; width: 216px; height: 384px; border: 1px solid var(--line); border-radius: 28px; overflow: hidden; }
-  .zone { position: absolute; left: 12px; right: 12px; border-radius: 10px; font-size: 11px; display: flex; align-items: center; justify-content: center; color: var(--muted); background: var(--soft); }
+  .phone { position: relative; width: 216px; height: 384px; border: 1px solid var(--line); border-radius: 28px; overflow: hidden; background: var(--paper); }
+  .zone { position: absolute; left: 12px; right: 12px; border-radius: 10px; font-size: 11px; display: flex; align-items: center; justify-content: center; color: var(--muted); background: var(--surface); }
   .zone.hud { top: 22px; height: 34px; }
-  .zone.board { top: 96px; height: 186px; left: 14px; right: 14px; background: var(--cell); }
+  .zone.board { top: 96px; height: 186px; left: 14px; right: 14px; background: var(--surface); }
   .zone.cta { bottom: 22px; height: 30px; left: 54px; right: 54px; background: var(--ink); color: #fff; border-radius: 999px; }
   .safe { position: absolute; inset: 10px 6px; border: 1px dashed #cfcfcf; border-radius: 22px; }
 
@@ -154,9 +156,9 @@
   </header>
 
   <section class="hero">
-    <div class="label">Overview<b>One level, four screens</b></div>
+    <div class="label">Overview<b>Ten levels, four screens</b></div>
     <div>
-      <p class="lead">A tap-to-pop puzzle: tap two or more touching tiles of one colour to pop them. Where tiles land, four or more of one colour pop by themselves. Clear 25 red tiles in 20 moves. The interface stays almost invisible so the tiles carry the whole game.</p>
+      <p class="lead">A tap-to-pop puzzle: tap two or more touching tiles of one colour to pop them. Where tiles land, four or more of one colour pop by themselves. Each level asks for a few more tiles of one colour in a few fewer moves. The interface stays almost invisible so the tiles carry the whole game.</p>
       <div class="screens" style="margin-top:40px">
         <figure><img src="assets/screens/start.png" alt="Start screen: logo mark, TapPop title, Play button"><figcaption>Start</figcaption></figure>
         <figure><img src="assets/screens/game.png" alt="Game screen: moves, goal and score above an 8 by 8 board"><figcaption>Game</figcaption></figure>
@@ -169,7 +171,7 @@
   <section>
     <div class="label">01<b>Principles</b></div>
     <div class="principles">
-      <div><h3>Quiet UI, loud tiles</h3><p>Ink on white, no cards, frames or shadows. Colour lives only in the tiles, so the board is the first thing the eye finds.</p></div>
+      <div><h3>Quiet UI, loud tiles</h3><p>Ink on light grey, white only for chips and empty slots, no cards, frames or shadows. Colour lives only in the tiles, so the board is the first thing the eye finds.</p></div>
       <div><h3>Shape before colour</h3><p>Sphere, cube, star, heart, flower. Every tile has its own silhouette, so it reads without colour and at small sizes.</p></div>
       <div><h3>Live text, never baked</h3><p>All copy is TextMeshPro in Geist. PNGs carry no words, so the UI localises and rescales without new art.</p></div>
     </div>
@@ -179,12 +181,11 @@
     <div class="label">02<b>Colour</b></div>
     <div>
       <div class="swatches">
-        <div class="swatch"><div class="chip" style="background:var(--paper)"></div><div class="name">paper</div><div class="hex">#FFFFFF</div><div class="use">All backgrounds</div></div>
+        <div class="swatch"><div class="chip" style="background:var(--paper)"></div><div class="name">paper</div><div class="hex">#F2F2F2</div><div class="use">All backgrounds</div></div>
+        <div class="swatch"><div class="chip" style="background:var(--surface)"></div><div class="name">surface</div><div class="hex">#FFFFFF</div><div class="use">Chips, empty tile slots</div></div>
         <div class="swatch"><div class="chip" style="background:var(--ink)"></div><div class="name">ink</div><div class="hex">#0A0A0A</div><div class="use">Titles, numbers, primary button</div></div>
         <div class="swatch"><div class="chip" style="background:var(--muted)"></div><div class="name">muted</div><div class="hex">#8E8E8E</div><div class="use">Labels</div></div>
-        <div class="swatch"><div class="chip" style="background:var(--soft)"></div><div class="name">soft</div><div class="hex">#F2F2F2</div><div class="use">Chips</div></div>
-        <div class="swatch"><div class="chip" style="background:var(--cell)"></div><div class="name">cell</div><div class="hex">#F5F5F4</div><div class="use">Empty tile slot</div></div>
-        <div class="swatch"><div class="chip" style="background:var(--star-empty)"></div><div class="name">star-empty</div><div class="hex">#EAEAEA</div><div class="use">Unearned star</div></div>
+        <div class="swatch"><div class="chip" style="background:var(--star-empty)"></div><div class="name">star-empty</div><div class="hex">#DBDBDB</div><div class="use">Unearned star</div></div>
         <div class="swatch"><div class="chip" style="background:var(--alert)"></div><div class="name">alert</div><div class="hex">#FF3848</div><div class="use">Last 5 moves</div></div>
       </div>
       <div class="swatches tile-swatches">
@@ -209,7 +210,7 @@
           <tr><td>Score</td><td>Medium</td><td>120</td><td>60</td><td class="sample"><span class="type-sample" style="font-size:60px;font-weight:500">4,300</span></td></tr>
           <tr><td>Display</td><td>Medium</td><td>84</td><td>42</td><td class="sample"><span class="type-sample" style="font-size:42px;font-weight:500">TapPop</span></td></tr>
           <tr><td>Title · Stat</td><td>Medium</td><td>72</td><td>36</td><td class="sample"><span class="type-sample" style="font-size:36px;font-weight:500">Level complete</span></td></tr>
-          <tr><td>Button</td><td>Medium</td><td>40</td><td>20</td><td class="sample"><span class="type-sample" style="font-size:20px;font-weight:500">Play again</span></td></tr>
+          <tr><td>Button</td><td>Medium</td><td>40</td><td>20</td><td class="sample"><span class="type-sample" style="font-size:20px;font-weight:500">Next level</span></td></tr>
           <tr><td>Body</td><td>Regular</td><td>34</td><td>17</td><td class="sample"><span style="font-size:17px">Tap two or more matching tiles</span></td></tr>
           <tr><td>Label</td><td>Regular</td><td>30</td><td>15</td><td class="sample"><span class="muted" style="font-size:15px">Moves · Goal · Score</span></td></tr>
         </tbody>
@@ -247,7 +248,7 @@
     <div class="label">05<b>Components</b></div>
     <div class="components">
       <div class="comp">
-        <div class="demo"><button class="primary">Play again</button></div>
+        <div class="demo"><button class="primary">Next level</button></div>
         <div><div class="name"><code>btn_primary</code></div><div class="desc">Ink pill, 64 tall. Press: scale 0.92, springs back. Try it.</div></div>
       </div>
       <div class="comp">
@@ -255,7 +256,7 @@
         <div><div class="name">Text button</div><div class="desc">Secondary action. No fill; the hit area stays full size.</div></div>
       </div>
       <div class="comp">
-        <div class="demo"><span class="pill">Level 1</span><span class="pill goal"><img src="assets/tiles/tile_red.png" alt="">15</span></div>
+        <div class="demo"><span class="pill">Level 1</span><span class="pill goal"><img src="assets/tiles/tile_red.png" alt="">25</span></div>
         <div><div class="name"><code>tag_title</code> · <code>tag_goal</code></div><div class="desc">Soft pill, 48 tall. The goal chip is where collected tiles fly to.</div></div>
       </div>
       <div class="comp">
@@ -352,7 +353,7 @@
           <tr><td>Pop</td><td>Grow to 1.2, shrink to 0; ripples out from the tap, 35 ms per step</td><td>190 ms</td><td>Out quad · in back</td></tr>
           <tr><td>Fall</td><td>Drop, then land with a 1.12 × 0.86 squash</td><td>120 ms + 35 ms per cell</td><td>In quad · out back</td></tr>
           <tr><td>Chain</td><td>After landing, groups of 4+ that hold a tile that just fell pop, rippling from that tile; repeats until the board is still</td><td>100 ms after landing</td><td>Same as pop</td></tr>
-          <tr><td>Goal collect</td><td>Popped red tiles curve up into the goal chip, which punches</td><td>550 ms</td><td>In-out quad</td></tr>
+          <tr><td>Goal collect</td><td>Popped goal tiles curve up into the goal chip, which punches</td><td>550 ms</td><td>In-out quad</td></tr>
           <tr><td>Result screen</td><td>White fades in, content settles from 0.92</td><td>200 · 350 ms</td><td>Out quad · out back</td></tr>
           <tr><td>Stars</td><td>Fill one by one with a burst</td><td>120 ms stagger</td><td>Out back</td></tr>
           <tr><td>Start mark</td><td>Slow turn and a 3% breathe</td><td>Loop</td><td>Linear · sine</td></tr>
@@ -360,6 +361,31 @@
       </table>
       </div>
       <p class="muted" style="margin-top:20px;font-size:13px">All motion runs on a small coroutine tween helper; the project has no third-party packages.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="label">10<b>Levels</b></div>
+    <div>
+      <p class="lead" style="margin-bottom:28px">Ten levels. Each one takes away a move or asks for one more tile, never both, and the goal colour goes round the tile set. Progress is saved, so the start screen always shows the level Play opens.</p>
+      <div class="table-wrap">
+      <table class="levels">
+        <thead><tr><th>Level</th><th>Moves</th><th>Goal</th><th>2 stars</th><th>3 stars</th><th>Wins (goal-first · random)</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>20</td><td><span class="goal-cell"><img src="assets/tiles/tile_red.png" alt="red">25</span></td><td>5,000</td><td>6,500</td><td>84% · 71%</td></tr>
+          <tr><td>2</td><td>19</td><td><span class="goal-cell"><img src="assets/tiles/tile_blue.png" alt="blue">25</span></td><td>5,000</td><td>6,600</td><td>81% · 67%</td></tr>
+          <tr><td>3</td><td>19</td><td><span class="goal-cell"><img src="assets/tiles/tile_green.png" alt="green">26</span></td><td>5,200</td><td>6,800</td><td>78% · 62%</td></tr>
+          <tr><td>4</td><td>18</td><td><span class="goal-cell"><img src="assets/tiles/tile_yellow.png" alt="yellow">26</span></td><td>5,200</td><td>6,800</td><td>74% · 58%</td></tr>
+          <tr><td>5</td><td>18</td><td><span class="goal-cell"><img src="assets/tiles/tile_purple.png" alt="purple">27</span></td><td>5,300</td><td>7,000</td><td>70% · 54%</td></tr>
+          <tr><td>6</td><td>17</td><td><span class="goal-cell"><img src="assets/tiles/tile_red.png" alt="red">27</span></td><td>5,300</td><td>7,000</td><td>64% · 50%</td></tr>
+          <tr><td>7</td><td>17</td><td><span class="goal-cell"><img src="assets/tiles/tile_blue.png" alt="blue">28</span></td><td>5,500</td><td>7,100</td><td>62% · 47%</td></tr>
+          <tr><td>8</td><td>17</td><td><span class="goal-cell"><img src="assets/tiles/tile_green.png" alt="green">29</span></td><td>5,700</td><td>7,300</td><td>58% · 42%</td></tr>
+          <tr><td>9</td><td>16</td><td><span class="goal-cell"><img src="assets/tiles/tile_yellow.png" alt="yellow">29</span></td><td>5,800</td><td>7,400</td><td>53% · 37%</td></tr>
+          <tr><td>10</td><td>16</td><td><span class="goal-cell"><img src="assets/tiles/tile_purple.png" alt="purple">30</span></td><td>5,900</td><td>7,500</td><td>48% · 34%</td></tr>
+        </tbody>
+      </table>
+      </div>
+      <p class="muted" style="margin-top:20px;font-size:13px">Tuned by simulating 4,000 games per level with two bots: one goes for the goal colour, one taps a random group. The curve drops 3 to 6 points a level, with no sudden wall. Two stars sit near the median winning score, three near the top fifth.</p>
     </div>
   </section>
 
