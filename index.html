@@ -13,7 +13,7 @@
     --paper: #F2F2F2;
     --surface: #FFFFFF;
     --ink: #0A0A0A;
-    --muted: #8E8E8E;
+    --muted: #4D4D4D;
     --star-empty: #DBDBDB;
     --alert: #FF3848;
     --line: #EDEDED;
@@ -105,7 +105,7 @@
   .path-demo { display: flex; align-items: center; gap: 8px; width: 100%; max-width: 520px; padding-bottom: 18px; }
   .path-demo .node { flex: none; width: 44px; height: 44px; border-radius: 50%; background: var(--surface); display: grid; place-items: center; position: relative; font-weight: 500; font-size: 16px; }
   .path-demo .node.current { background: var(--ink); color: #fff; animation: breathe 2.5s ease-in-out infinite; }
-  .path-demo .node.locked { background: rgba(255,255,255,.5); color: var(--muted); }
+  .path-demo .node.locked { background: rgba(255,255,255,.5); color: #8E8E8E; }
   .path-demo .mini { position: absolute; top: 50px; display: flex; gap: 1px; }
   .path-demo .mini img { width: 13px; height: 13px; }
   .path-demo .dots { flex: 1; min-width: 12px; height: 6px; background: radial-gradient(circle, var(--ink) 2.4px, transparent 3px) 0 0 / 11px 6px repeat-x; }
@@ -134,6 +134,16 @@
   .zone.cta { bottom: 22px; height: 30px; left: 54px; right: 54px; background: var(--ink); color: #fff; border-radius: 999px; }
   .safe { position: absolute; inset: 10px 6px; border: 1px dashed #cfcfcf; border-radius: 22px; }
 
+  .sub-h { font-size: 16px; margin-bottom: 12px; }
+  table.decisions td:first-child { font-weight: 500; white-space: nowrap; }
+  table.decisions td:last-child { color: var(--muted); }
+  .timeline { list-style: none; }
+  .timeline li { display: grid; grid-template-columns: 80px 1fr; gap: 20px; padding: 18px 0; border-bottom: 1px solid var(--line); }
+  .timeline li:first-child { padding-top: 0; }
+  .timeline .when { font-size: 13px; color: var(--muted); padding-top: 2px; }
+  .timeline h3 { font-size: 16px; margin-bottom: 6px; }
+  .timeline p { font-size: 14px; }
+
   footer { border-top: 1px solid var(--line); padding-top: 28px; display: flex; justify-content: space-between; gap: 24px; flex-wrap: wrap; font-size: 13px; color: var(--muted); }
 
   @media (max-width: 900px) {
@@ -148,6 +158,8 @@
     .layout { grid-template-columns: 1fr; }
     header .meta { text-align: left; align-items: flex-start; }
     .table-wrap { overflow-x: auto; }
+    table.decisions td:first-child { white-space: normal; }
+    .timeline li { grid-template-columns: 1fr; gap: 4px; }
   }
 </style>
 </head>
@@ -171,11 +183,12 @@
     <div class="label">Overview<b>Ten levels, four screens</b></div>
     <div>
       <p class="lead">A tap-to-pop puzzle: tap two or more touching tiles of one colour to pop them. Where tiles land, four or more of one colour pop by themselves. Ten levels on a path: each asks for one more tile or gives one move fewer. The interface stays almost invisible so the tiles carry the whole game.</p>
+      <p class="muted" style="margin-top:16px">Why it is built this way: <a href="#decisions">11 Decisions</a>. How it was made in a week with Claude: <a href="#process">12 How it was made</a>.</p>
       <div class="screens" style="margin-top:40px">
-        <figure><img src="assets/screens/start.png" alt="Start screen: logo, title and the level path with stars, Play level 3 button"><figcaption>Start</figcaption></figure>
+        <figure><img src="assets/screens/start.png" alt="Start screen: logo, title and the level path with stars, Play level 5 button"><figcaption>Start</figcaption></figure>
         <figure><img src="assets/screens/game.png" alt="Game screen: moves, goal and score above an 8 by 8 board"><figcaption>Game</figcaption></figure>
-        <figure><img src="assets/screens/pop.png" alt="A group of tiles popping with particles"><figcaption>Pop</figcaption></figure>
-        <figure><img src="assets/screens/result.png" alt="Result screen with three stars and the score"><figcaption>Result</figcaption></figure>
+        <figure><img src="assets/screens/pop.png" alt="A group popping while goal tiles fly into the goal icon"><figcaption>Pop</figcaption></figure>
+        <figure><img src="assets/screens/result.png" alt="Result screen: Level 1 complete, two stars and the score"><figcaption>Result</figcaption></figure>
       </div>
     </div>
   </section>
@@ -183,7 +196,7 @@
   <section>
     <div class="label">01<b>Principles</b></div>
     <div class="principles">
-      <div><h3>Quiet UI, loud tiles</h3><p>Ink on light grey, white only for chips and empty slots, no cards, frames or shadows. Colour lives only in the tiles, so the board is the first thing the eye finds.</p></div>
+      <div><h3>Quiet UI, loud tiles</h3><p>Ink on light grey, white only for path nodes and empty slots, no cards, frames or shadows. Colour lives only in the tiles, so the board is the first thing the eye finds.</p></div>
       <div><h3>Shape before colour</h3><p>Sphere, cube, star, heart, flower. Every tile has its own silhouette, so it reads without colour and at small sizes.</p></div>
       <div><h3>Live text, never baked</h3><p>All copy is TextMeshPro in Geist. PNGs carry no words, so the UI localises and rescales without new art.</p></div>
     </div>
@@ -194,9 +207,9 @@
     <div>
       <div class="swatches">
         <div class="swatch"><div class="chip" style="background:var(--paper)"></div><div class="name">paper</div><div class="hex">#F2F2F2</div><div class="use">All backgrounds</div></div>
-        <div class="swatch"><div class="chip" style="background:var(--surface)"></div><div class="name">surface</div><div class="hex">#FFFFFF</div><div class="use">Level chips, path nodes, empty tile slots</div></div>
+        <div class="swatch"><div class="chip" style="background:var(--surface)"></div><div class="name">surface</div><div class="hex">#FFFFFF</div><div class="use">Path nodes, empty tile slots</div></div>
         <div class="swatch"><div class="chip" style="background:var(--ink)"></div><div class="name">ink</div><div class="hex">#0A0A0A</div><div class="use">Titles, numbers, primary button</div></div>
-        <div class="swatch"><div class="chip" style="background:var(--muted)"></div><div class="name">muted</div><div class="hex">#8E8E8E</div><div class="use">Labels</div></div>
+        <div class="swatch"><div class="chip" style="background:var(--muted)"></div><div class="name">muted</div><div class="hex">#4D4D4D</div><div class="use">Labels, 7.5:1 on paper</div></div>
         <div class="swatch"><div class="chip" style="background:var(--star-empty)"></div><div class="name">star-empty</div><div class="hex">#DBDBDB</div><div class="use">Unearned star</div></div>
         <div class="swatch"><div class="chip" style="background:var(--alert)"></div><div class="name">alert</div><div class="hex">#FF3848</div><div class="use">Last 5 moves</div></div>
       </div>
@@ -221,7 +234,7 @@
         <tbody>
           <tr><td>Score</td><td>Medium</td><td>120</td><td>60</td><td class="sample"><span class="type-sample" style="font-size:60px;font-weight:500">4,300</span></td></tr>
           <tr><td>Display</td><td>Medium</td><td>84</td><td>42</td><td class="sample"><span class="type-sample" style="font-size:42px;font-weight:500">TapPop</span></td></tr>
-          <tr><td>Title · Stat</td><td>Medium</td><td>72</td><td>36</td><td class="sample"><span class="type-sample" style="font-size:36px;font-weight:500">Level complete</span></td></tr>
+          <tr><td>Title · Stat</td><td>Medium</td><td>72</td><td>36</td><td class="sample"><span class="type-sample" style="font-size:36px;font-weight:500">Level 3 complete</span></td></tr>
           <tr><td>Button</td><td>Medium</td><td>40</td><td>20</td><td class="sample"><span class="type-sample" style="font-size:20px;font-weight:500">Next level</span></td></tr>
           <tr><td>Body</td><td>Regular</td><td>34</td><td>17</td><td class="sample"><span style="font-size:17px">Tap two or more matching tiles</span></td></tr>
           <tr><td>Label</td><td>Regular</td><td>30</td><td>15</td><td class="sample"><span class="muted" style="font-size:15px">Moves · Goal · Score</span></td></tr>
@@ -268,10 +281,6 @@
         <div><div class="name">Text button</div><div class="desc">Secondary action. No fill; the hit area stays full size.</div></div>
       </div>
       <div class="comp">
-        <div class="demo"><span class="pill">Level 1</span></div>
-        <div><div class="name"><code>tag_title</code></div><div class="desc">White pill, 48 tall, for the level name on the result screen.</div></div>
-      </div>
-      <div class="comp">
         <div class="demo"><div class="stat"><div class="k">Moves</div><div class="v">20</div></div><div class="stat"><div class="k">Goal</div><div class="v goal"><img src="assets/tiles/tile_green.png" alt="">12</div></div><div class="stat"><div class="k">Last moves</div><div class="v low">4</div></div></div>
         <div><div class="name">HUD stat</div><div class="desc">Label over number, straight on the paper. The goal shows its tile, and collected tiles fly into it. Moves turn alert red for the last 5.</div></div>
       </div>
@@ -280,7 +289,7 @@
           <img class="star on" src="assets/icons/icon_star_full.png" alt="">
           <img class="star off" src="assets/icons/icon_star_empty.png" alt="">
         </div>
-        <div><div class="name"><code>icon_star_full</code> · <code>icon_star_empty</code></div><div class="desc">Stars fill one by one with a colour burst.</div></div>
+        <div><div class="name"><code>icon_star_full</code> · <code>icon_star_empty</code></div><div class="desc">Stars fill one by one, each a little bigger and higher in pitch. Confetti grows with the count, and three stars get a second wave.</div></div>
       </div>
       <div class="comp">
         <div class="demo"><div class="board-mini"><img src="assets/tiles/tile_blue.png" alt=""><div class="cellbox"></div><img src="assets/tiles/tile_yellow.png" alt=""></div></div>
@@ -305,9 +314,31 @@
       <div class="pipeline">
         <div class="step"><h3>Figma</h3><p>Frame 540 × 960. Layers named <code>type_name</code>. Export PNG @2x.</p></div>
         <div class="step"><h3>Drop folder</h3><p>Exports land in <code>figma-export/</code> next to the Unity project.</p></div>
-        <div class="step"><h3>Import</h3><p><b>TapPop › Import</b> sorts files by prefix into Tiles, UI, Icons, FX, Backgrounds and drops the @2x suffix.</p></div>
+        <div class="step"><h3>Import</h3><p><b>TapPop › Import From figma-export</b> sorts files by prefix into Tiles, UI, Icons, FX, Backgrounds and drops the @2x suffix.</p></div>
         <div class="step"><h3>Import rules</h3><p>Sprite, 100 PPU, no mipmaps, clamp, compressed HQ. 9-slice borders from the prefix on first import; manual edits survive re-exports.</p></div>
         <div class="step"><h3>Relink and atlas</h3><p>Each UI image names the art it expects and is filled by file name. One sprite atlas: padding 4, no rotation, backgrounds left out.</p></div>
+      </div>
+      <div class="two" style="margin-top:40px">
+        <div>
+          <h3 class="sub-h">Why this way</h3>
+          <p>File names are the contract. A PNG named <code>tile_red</code> lands in Tiles and fills every image that asks for <code>tile_red</code>, so art changes without touching the scene or the code.</p>
+          <p style="margin-top:12px">That made iteration cheap: on day one the tiles changed twice, from placeholders to balloon animals to jelly shapes, and each swap was an export and one click. Import settings come from rules, so nobody has to remember them.</p>
+        </div>
+        <div>
+          <h3 class="sub-h">When something changes</h3>
+          <ul class="rules" style="margin-top:0">
+            <li><b>Redraw a tile or icon</b>: export it under the same name, then TapPop › Import From figma-export.</li>
+            <li><b>New sliced UI</b>: start the name with <code>btn_</code>, <code>tag_</code>, <code>panel_</code>, <code>frame_</code> or <code>bar_</code>, and the 9-slice borders are set on import.</li>
+            <li><b>Tile colour or particles</b>: edit the Tile Set asset.</li>
+            <li><b>New level</b>: add a row to the level table in the scene builder and run TapPop › Build Game Scene. Levels already tuned keep their values.</li>
+            <li><b>Someone else on the team</b>: they need the naming rules in 07 and the TapPop menu, nothing else. No scene editing.</li>
+          </ul>
+        </div>
+      </div>
+      <h3 class="sub-h" style="margin-top:40px">Two scripts</h3>
+      <div class="two">
+        <p><code>tools/make_art.py</code> draws the logo, stars and spark as vector shapes in the tile style (soft body, darker rim, one gloss) and renders them as @2x PNGs into <code>figma-export/</code>, so they go through the same import as the Figma art.</p>
+        <p><code>tools/make_sfx.py</code> synthesises the three pop sounds, a fast upward pitch glide with a short click, as WAV files. No licensed audio. Both outputs are checked in, so the project opens without Python.</p>
       </div>
     </div>
   </section>
@@ -375,9 +406,10 @@
           <tr><td>Pop</td><td>Grow to 1.2, shrink to 0; ripples out from the tap, 35 ms per step</td><td>190 ms</td><td>Out quad · in back</td></tr>
           <tr><td>Fall</td><td>Drop, then land with a 1.12 × 0.86 squash</td><td>120 ms + 35 ms per cell</td><td>In quad · out back</td></tr>
           <tr><td>Chain</td><td>After landing, groups of 4+ that hold a tile that just fell pop, rippling from that tile; repeats until the board is still</td><td>100 ms after landing</td><td>Same as pop</td></tr>
-          <tr><td>Goal collect</td><td>Popped goal tiles curve up into the goal chip, which punches</td><td>550 ms</td><td>In-out quad</td></tr>
-          <tr><td>Result screen</td><td>White fades in, content settles from 0.92</td><td>200 · 350 ms</td><td>Out quad · out back</td></tr>
-          <tr><td>Stars</td><td>Fill one by one with a burst</td><td>120 ms stagger</td><td>Out back</td></tr>
+          <tr><td>Goal collect</td><td>Popped goal tiles curve up into the goal icon, which punches</td><td>550 ms</td><td>In-out quad</td></tr>
+          <tr><td>Result screen</td><td>Paper fades in, content settles from 0.92; the level number is part of the title</td><td>200 · 350 ms</td><td>Out quad · out back</td></tr>
+          <tr><td>Stars</td><td>Fill one by one; each lands bigger (1.25, 1.35, 1.45), bursts wider and pops a little higher</td><td>120 ms stagger</td><td>Out back</td></tr>
+          <tr><td>Celebration</td><td>Confetti fountain from the star row: 12 pieces for one star, 30 for two, 56 and a second wave for three, plus a punch on the row</td><td>3 waves, 60 ms apart; 2.2 s</td><td>0.45 gravity, sideways drag</td></tr>
           <tr><td>Start mark</td><td>Slow turn and a 3% breathe</td><td>Loop</td><td>Linear · sine</td></tr>
           <tr><td>Current level</td><td>Path node at 1.25 scale with a 4% breathe</td><td>Loop</td><td>Sine</td></tr>
           <tr><td>Pop sound</td><td>One short pop per ripple ring, timed with the burst; pitch climbs ring by ring and with each chain step. Three variants, picked at random</td><td>140 ms</td><td>n/a</td></tr>
@@ -410,6 +442,52 @@
       </table>
       </div>
       <p class="muted" style="margin-top:20px;font-size:13px">Tuned by simulating 4,000 games per level with two bots: one goes for the goal colour, one taps a random group. Winning stays easy, from 99% to 88% even for the random bot, so the challenge moves to the stars: two sit near the median winning score, three near the top fifth.</p>
+    </div>
+  </section>
+
+  <section id="decisions">
+    <div class="label">11<b>Decisions</b></div>
+    <div>
+      <div class="table-wrap">
+      <table class="decisions">
+        <thead><tr><th>Decision</th><th>Why</th><th>Instead of</th></tr></thead>
+        <tbody>
+          <tr><td>uGUI for all UI</td><td>The usual tool for in-game mobile UI: sprites, 9-slice, atlases and prefabs, animated through RectTransforms.</td><td>UI Toolkit, which suits editor tools and data-heavy menus better</td></tr>
+          <tr><td>TextMeshPro, live text</td><td>Sharp at every size, one font asset for all copy, and words can change or be translated without new art.</td><td>Text baked into PNGs: soft when scaled, one export per language</td></tr>
+          <tr><td>One sprite atlas</td><td>The whole UI draws in a few batches. Backgrounds stay out, because they would waste most of the page.</td><td>Loose sprites, one draw call each</td></tr>
+          <tr><td>9-slice pills and panels</td><td>One small PNG stretches to any width, and the corners never distort.</td><td>One PNG per button size</td></tr>
+          <tr><td>1080 × 1920 reference, Expand</td><td>The Figma frame @2x maps 1:1 to Unity, and the layout fits every screen without cropping.</td><td>Match width or height, which crops on tall or wide phones</td></tr>
+          <tr><td>Scene built from code</td><td>One click rebuilds the scene with every reference wired. Colours and sizes live in one file, and a missing link stops the build. The cost: hand edits in the scene are lost on rebuild, so changes go into the builder or the assets.</td><td>A hand-wired scene: quick to start, easy to break without noticing</td></tr>
+          <tr><td>Levels as assets</td><td>Moves, goal and star scores are tuned in the Inspector, without code.</td><td>Numbers in a script</td></tr>
+          <tr><td>Particles as pooled UI images</td><td>They sort with the UI, need no extra camera and allocate nothing mid-game.</td><td>Particle System, which needs camera tricks to sit between UI layers</td></tr>
+          <tr><td>Own tween helper</td><td>A few coroutines cover every motion here, so the project needs no third-party packages.</td><td>DOTween or a similar package</td></tr>
+          <tr><td>Chain rule: 4 or more</td><td>Picked by simulation. With 2 or 3 the board kept popping by itself and played the game for you; with 4, about two taps in five start a chain.</td><td>2+ or 3+</td></tr>
+          <tr><td>Synthesised sounds</td><td>No licensed audio, and the pitch can climb with each ring and chain step.</td><td>Clips from a sound library</td></tr>
+          <tr><td>WebGL on GitHub Pages</td><td>Anyone can play from a link, on desktop or phone, with nothing to install.</td><td>A downloadable build</td></tr>
+        </tbody>
+      </table>
+      </div>
+    </div>
+  </section>
+
+  <section id="process">
+    <div class="label">12<b>How it was made</b></div>
+    <div>
+      <p class="lead" style="margin-bottom:28px">About a week, 2 to 8 November 2026, with Claude (Anthropic) as the developer. I designed the art and the UI and made the calls; Claude wrote the C#, set up Unity, ran the builds and tested them.</p>
+      <ol class="timeline">
+        <li><span class="when">2 Nov</span><div><h3>Plan</h3><p>A tap-to-pop mechanic: small enough for a week, and nearly all of it is UI (HUD, goal, results, feedback). One level, three screens. I draw in Figma, Claude builds in Unity.</p></div></li>
+        <li><span class="when">4 Nov</span><div><h3>A running game first</h3><p>Claude built the whole loop with placeholder shapes, so I designed against a playable build instead of static frames. My first tiles were balloon animals; I redrew them as jelly shapes so every colour also has its own silhouette. The look changed twice, from bright cards to this quiet grey UI, and each change took minutes because the scene is built from code.</p></div></li>
+        <li><span class="when">5 Nov</span><div><h3>Icons and this guide</h3><p>The logo, stars and spark follow my tile style; Claude wrote a script that draws them from it. Then the style guide.</p></div></li>
+        <li><span class="when">6 Nov</span><div><h3>Play, then change</h3><p>Playing it, I wanted tiles that land together to pop on their own, so we tested the rule by simulation before adding it. Then ten levels, the level path and a pop sound. When it felt too hard, the levels were retuned with 4,000 simulated games each.</p></div></li>
+        <li><span class="when">8 Nov</span><div><h3>Source and first feedback</h3><p>The Unity project went on GitHub. Feedback from a game developer led to darker labels, the level number in the result title, a celebration that grows with the stars, and these last two sections.</p></div></li>
+      </ol>
+      <h3 class="sub-h" style="margin-top:40px">How we worked</h3>
+      <ul class="rules" style="margin-top:0">
+        <li>I described changes in plain words, often with an annotated screenshot, like "no white behind the goal".</li>
+        <li>Claude changed the code, rebuilt, and played the build with a small bot before I looked at it.</li>
+        <li>Questions without an obvious answer, like difficulty or the chain rule, were settled by simulation instead of guesswork.</li>
+        <li>What stayed with me: the art, the look and the feel. "Too hard" came from playing it, not from the code.</li>
+      </ul>
     </div>
   </section>
 
